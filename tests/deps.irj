@@ -1,0 +1,3 @@
+;; deps.irj — test dependencies
+dep vrata
+  path ".."

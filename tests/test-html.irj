@@ -1,0 +1,54 @@
+use std.test :open
+use vrata.html :open
+use vrata.css :open
+use vrata.page :open
+
+;; helper: check if str contains substr
+fn has
+  (str sub -> index-of str sub >= 0)
+
+;; -- element creation --
+
+r1 := test "el creates element map" (-> assert-eq "div" (get "tag" (el "div" {} #[])))
+r2 := test "cls creates class attr map" (-> assert-eq "hero" (get "class" (cls "hero")))
+r3 := test "raw creates raw-html map" (-> assert-eq "<b>bold</b>" (get "raw-html" (raw "<b>bold</b>")))
+
+;; -- rendering --
+
+r4 := test "render string escapes HTML" (-> assert-eq "&lt;script&gt;" (render "<script>"))
+r5 := test "render empty div" (-> assert-eq "<div></div>" (render (div {} #[])))
+r6 := test "render div with text child" (-> assert-eq "<div>hello</div>" (render (div {} #["hello"])))
+r7 := test "render nested elements" (-> assert-eq "<div><p>hi</p></div>" (render (div {} #[(p {} #["hi"])])))
+r8 := test "render void br" (-> assert-eq "<br />" (render (br {})))
+r9 := test "render void hr" (-> assert-eq "<hr />" (render (hr {})))
+r10 := test "render raw HTML" (-> assert-eq "<b>bold</b>" (render (raw "<b>bold</b>")))
+r11 := test "render mixed text and elements" (-> assert-eq "<p>Hello <em>world</em></p>" (render (p {} #["Hello " (em {} #["world"])])))
+r12 := test "render vector fragment" (-> assert-eq "<p>one</p><p>two</p>" (render #[(p {} #["one"]) (p {} #["two"])]))
+r13 := test "render nil as empty" (-> assert-eq "" (render ()))
+r14 := test "render integer" (-> assert-eq "42" (render 42))
+r15 := test "html-escape special chars" (-> assert-eq "&amp;&lt;&gt;&quot;" (html-escape "&<>\""))
+r16 := test "render deeply nested" (-> assert-eq "<div><div><div><p>deep</p></div></div></div>" (render (div {} #[(div {} #[(div {} #[(p {} #["deep"])])])])))
+
+;; -- tag functions --
+
+r17 := test "h1 element" (-> assert-eq "<h1>Title</h1>" (render (h1 {} #["Title"])))
+r18 := test "h2 element" (-> assert-eq "<h2>Sub</h2>" (render (h2 {} #["Sub"])))
+r19 := test "a with href" (-> assert-eq "<a href=\"/\">Home</a>" (render (a {href= "/"} #["Home"])))
+r20 := test "ul with li" (-> assert-eq "<ul><li>one</li><li>two</li></ul>" (render (ul {} #[(li {} #["one"]) (li {} #["two"])])))
+r21 := test "header element" (-> assert-eq "<header>top</header>" (render (header {} #["top"])))
+r22 := test "nav element" (-> assert-eq "<nav>links</nav>" (render (nav {} #["links"])))
+r23 := test "style with raw CSS" (-> assert-eq "<style>body{color:red}</style>" (render (style {} #[(raw "body{color:red}")])))
+
+;; -- CSS helpers --
+
+r24 := test "rule creates CSS rule" (-> assert-eq "body{margin:0}" (rule "body" "margin:0"))
+r25 := test "stylesheet joins rules" (-> assert-eq "a{color:red}b{color:blue}" (stylesheet #[(rule "a" "color:red") (rule "b" "color:blue")]))
+r26 := test "media query" (-> assert-eq "@media(max-width:700px){.grid{display:block}}" (media "max-width:700px" #[(rule ".grid" "display:block")]))
+
+;; -- page template --
+
+r27 := test "page produces DOCTYPE" (-> assert-true (starts-with? (page "Test" "" #[] #[(p {} #["hi"])]) "<!DOCTYPE html>"))
+r28 := test "page includes body" (-> assert-true (has (page "T" "" #[] #[(h1 {} #["Hello"])]) "<h1>Hello</h1>"))
+r29 := test "page includes CSS" (-> assert-true (has (page "T" "body{color:red}" #[] #[]) "body{color:red}"))
+
+summarize #[r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12 r13 r14 r15 r16 r17 r18 r19 r20 r21 r22 r23 r24 r25 r26 r27 r28 r29]

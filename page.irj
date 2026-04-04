@@ -1,0 +1,20 @@
+mod vrata.page
+
+use vrata.html :open
+
+;; HTML page template -- generates a full <!DOCTYPE html> document
+
+fn head-base
+  (title-str -> #[(el "meta" {charset= "UTF-8"} #[]) (el "meta" {name= "viewport" content= "width=device-width,initial-scale=1.0"} #[]) (title {} #[title-str])])
+
+fn add-extras
+  (head-els extras -> if (extras == ()) head-els else (head-els ++ extras))
+
+fn add-css
+  (head-els css-str -> if (css-str == ()) head-els else (head-els ++ #[(style {} #[(raw css-str)])]))
+
+fn build-head
+  (title-str css-str extras -> add-css (add-extras (head-base title-str) extras) css-str)
+
+pub fn page
+  (title-str css-str head-extras body-children -> "<!DOCTYPE html>" ++ render (el "html" {lang= "en"} #[(el "head" {} (build-head title-str css-str head-extras)) (el "body" {} body-children)]))

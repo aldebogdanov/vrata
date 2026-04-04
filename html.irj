@@ -1,0 +1,181 @@
+mod vrata.html
+
+;; Vrata -- Hiccup-style HTML rendering for Irij
+;;
+;; Elements are maps: {tag= "div" attrs= {class= "x"} children= #[...]}
+;; Children can be strings (text nodes), element maps, or vectors (fragments).
+;;
+;; Inside #[...], wrap function calls in parens: #[(f x) (g y)]
+;; Strings and literals don't need parens: #["text" 42]
+
+;; -- Utilities --
+
+pub fn html-escape
+  (s -> replace (replace (replace (replace s "&" "&amp;") "<" "&lt;") ">" "&gt;") "\"" "&quot;")
+
+pub fn cls
+  (c -> {class= c})
+
+;; -- Element creation --
+
+pub fn el
+  (tag attrs children -> {tag= tag attrs= attrs children= children})
+
+pub fn raw
+  (s -> {raw-html= s})
+
+;; -- Internal rendering helpers --
+
+fn void-tag?
+  (tag -> contains? #["br" "hr" "img" "input" "meta" "link" "area" "base" "col" "embed" "source" "track" "wbr"] tag)
+
+fn is-raw
+  (node -> get "raw-html" node /= ())
+
+fn is-el
+  (node -> get "tag" node /= ())
+
+fn render-attr
+  (k v -> if (v == ()) "" else if (v == true) (" " ++ k) else if (v == false) "" else (" " ++ k ++ "=\"" ++ (html-escape (to-str v)) ++ "\""))
+
+fn render-attrs
+  (attrs -> fold (acc k -> acc ++ (render-attr k (get k attrs))) "" (keys attrs))
+
+fn render-children
+  (children -> fold (acc child -> acc ++ (render child)) "" children)
+
+fn render-el
+  node =>
+    tag := get "tag" node
+    attrs := get "attrs" node
+    children := get "children" node
+    attr-str := if (attrs == ()) "" else (render-attrs attrs)
+    child-str := if (children == ()) "" else (render-children children)
+    if (void-tag? tag) ("<" ++ tag ++ attr-str ++ " />") else ("<" ++ tag ++ attr-str ++ ">" ++ child-str ++ "</" ++ tag ++ ">")
+
+fn render-map
+  (node -> if (is-raw node) (get "raw-html" node) else if (is-el node) (render-el node) else "")
+
+;; -- Core render function --
+
+pub fn render
+  (node -> if (type-of node == "Str") (html-escape node) else if (type-of node == "Map") (render-map node) else if (type-of node == "Vector") (render-children node) else if (type-of node == "Int") (to-str node) else if (type-of node == "Float") (to-str node) else if (type-of node == "Unit") "" else (html-escape (to-str node)))
+
+;; Render without escaping a top-level string
+pub fn render-unescaped
+  (node -> if (type-of node == "Str") node else (render node))
+
+;; -- Tag functions --
+;; Each takes (attrs children) and returns an element map.
+
+;; Layout
+pub fn div
+  (attrs children -> el "div" attrs children)
+pub fn span
+  (attrs children -> el "span" attrs children)
+pub fn section
+  (attrs children -> el "section" attrs children)
+pub fn article
+  (attrs children -> el "article" attrs children)
+pub fn aside
+  (attrs children -> el "aside" attrs children)
+pub fn header
+  (attrs children -> el "header" attrs children)
+pub fn footer
+  (attrs children -> el "footer" attrs children)
+pub fn nav
+  (attrs children -> el "nav" attrs children)
+pub fn main
+  (attrs children -> el "main" attrs children)
+
+;; Text
+pub fn p
+  (attrs children -> el "p" attrs children)
+pub fn a
+  (attrs children -> el "a" attrs children)
+pub fn em
+  (attrs children -> el "em" attrs children)
+pub fn strong
+  (attrs children -> el "strong" attrs children)
+pub fn small
+  (attrs children -> el "small" attrs children)
+pub fn code
+  (attrs children -> el "code" attrs children)
+pub fn pre-el
+  (attrs children -> el "pre" attrs children)
+pub fn blockquote
+  (attrs children -> el "blockquote" attrs children)
+
+;; Headings
+pub fn h1
+  (attrs children -> el "h1" attrs children)
+pub fn h2
+  (attrs children -> el "h2" attrs children)
+pub fn h3
+  (attrs children -> el "h3" attrs children)
+pub fn h4
+  (attrs children -> el "h4" attrs children)
+pub fn h5
+  (attrs children -> el "h5" attrs children)
+pub fn h6
+  (attrs children -> el "h6" attrs children)
+
+;; Lists
+pub fn ul
+  (attrs children -> el "ul" attrs children)
+pub fn ol
+  (attrs children -> el "ol" attrs children)
+pub fn li
+  (attrs children -> el "li" attrs children)
+
+;; Table
+pub fn table
+  (attrs children -> el "table" attrs children)
+pub fn thead
+  (attrs children -> el "thead" attrs children)
+pub fn tbody
+  (attrs children -> el "tbody" attrs children)
+pub fn tfoot
+  (attrs children -> el "tfoot" attrs children)
+pub fn tr
+  (attrs children -> el "tr" attrs children)
+pub fn th
+  (attrs children -> el "th" attrs children)
+pub fn td
+  (attrs children -> el "td" attrs children)
+
+;; Form
+pub fn form
+  (attrs children -> el "form" attrs children)
+pub fn button
+  (attrs children -> el "button" attrs children)
+pub fn label
+  (attrs children -> el "label" attrs children)
+pub fn select-el
+  (attrs children -> el "select" attrs children)
+pub fn option
+  (attrs children -> el "option" attrs children)
+pub fn textarea
+  (attrs children -> el "textarea" attrs children)
+
+;; Script and Style
+pub fn style
+  (attrs children -> el "style" attrs children)
+pub fn script
+  (attrs children -> el "script" attrs children)
+pub fn title
+  (attrs children -> el "title" attrs children)
+
+;; Void elements (no children -- only take attrs)
+pub fn img
+  (attrs -> el "img" attrs #[])
+pub fn br
+  (attrs -> el "br" attrs #[])
+pub fn hr
+  (attrs -> el "hr" attrs #[])
+pub fn input
+  (attrs -> el "input" attrs #[])
+pub fn meta-tag
+  (attrs -> el "meta" attrs #[])
+pub fn link-tag
+  (attrs -> el "link" attrs #[])

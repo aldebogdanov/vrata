@@ -1,0 +1,4 @@
+;; deps.irj — Vrata framework dependencies
+;; Self-referencing for development & testing
+dep vrata
+  path "."
