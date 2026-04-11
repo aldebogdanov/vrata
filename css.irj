@@ -6,14 +6,14 @@ mod vrata.css
 
 ;; Create a CSS rule: rule ".card" "padding:1rem;margin:0"
 ;; => ".card{padding:1rem;margin:0}"
-pub fn rule
+pub fn rule :: Str Str Str
   (selector props -> selector ++ "{" ++ props ++ "}")
 
 ;; Join a vector of CSS rule strings into a single stylesheet string
-pub fn stylesheet
+pub fn stylesheet :: _ Str
   (rules -> join "" rules)
 
 ;; Media query wrapper: media "max-width:700px" #[(rule ".grid" "grid-template-columns:1fr")]
 ;; => "@media(max-width:700px){.grid{grid-template-columns:1fr}}"
-pub fn media
+pub fn media :: Str _ Str
   (query rules -> "@media(" ++ query ++ "){" ++ (join "" rules) ++ "}")

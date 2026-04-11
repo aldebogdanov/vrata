@@ -10,18 +10,18 @@ mod vrata.html
 
 ;; -- Utilities --
 
-pub fn html-escape
+pub fn html-escape :: Str Str
   (s -> replace (replace (replace (replace s "&" "&amp;") "<" "&lt;") ">" "&gt;") "\"" "&quot;")
 
-pub fn cls
+pub fn cls :: Str Map
   (c -> {class= c})
 
 ;; -- Element creation --
 
-pub fn el
+pub fn el :: Str Map _ Map
   (tag attrs children -> {tag= tag attrs= attrs children= children})
 
-pub fn raw
+pub fn raw :: Str Map
   (s -> {raw-html= s})
 
 ;; -- Internal rendering helpers --
@@ -58,124 +58,124 @@ fn render-map
 
 ;; -- Core render function --
 
-pub fn render
+pub fn render :: _ Str
   (node -> if (type-of node == "Str") (html-escape node) else if (type-of node == "Map") (render-map node) else if (type-of node == "Vector") (render-children node) else if (type-of node == "Int") (to-str node) else if (type-of node == "Float") (to-str node) else if (type-of node == "Unit") "" else (html-escape (to-str node)))
 
 ;; Render without escaping a top-level string
-pub fn render-unescaped
+pub fn render-unescaped :: _ Str
   (node -> if (type-of node == "Str") node else (render node))
 
 ;; -- Tag functions --
 ;; Each takes (attrs children) and returns an element map.
 
 ;; Layout
-pub fn div
+pub fn div :: Map _ Map
   (attrs children -> el "div" attrs children)
-pub fn span
+pub fn span :: Map _ Map
   (attrs children -> el "span" attrs children)
-pub fn section
+pub fn section :: Map _ Map
   (attrs children -> el "section" attrs children)
-pub fn article
+pub fn article :: Map _ Map
   (attrs children -> el "article" attrs children)
-pub fn aside
+pub fn aside :: Map _ Map
   (attrs children -> el "aside" attrs children)
-pub fn header
+pub fn header :: Map _ Map
   (attrs children -> el "header" attrs children)
-pub fn footer
+pub fn footer :: Map _ Map
   (attrs children -> el "footer" attrs children)
-pub fn nav
+pub fn nav :: Map _ Map
   (attrs children -> el "nav" attrs children)
-pub fn main
+pub fn main :: Map _ Map
   (attrs children -> el "main" attrs children)
 
 ;; Text
-pub fn p
+pub fn p :: Map _ Map
   (attrs children -> el "p" attrs children)
-pub fn a
+pub fn a :: Map _ Map
   (attrs children -> el "a" attrs children)
-pub fn em
+pub fn em :: Map _ Map
   (attrs children -> el "em" attrs children)
-pub fn strong
+pub fn strong :: Map _ Map
   (attrs children -> el "strong" attrs children)
-pub fn small
+pub fn small :: Map _ Map
   (attrs children -> el "small" attrs children)
-pub fn code
+pub fn code :: Map _ Map
   (attrs children -> el "code" attrs children)
-pub fn pre-el
+pub fn pre-el :: Map _ Map
   (attrs children -> el "pre" attrs children)
-pub fn blockquote
+pub fn blockquote :: Map _ Map
   (attrs children -> el "blockquote" attrs children)
 
 ;; Headings
-pub fn h1
+pub fn h1 :: Map _ Map
   (attrs children -> el "h1" attrs children)
-pub fn h2
+pub fn h2 :: Map _ Map
   (attrs children -> el "h2" attrs children)
-pub fn h3
+pub fn h3 :: Map _ Map
   (attrs children -> el "h3" attrs children)
-pub fn h4
+pub fn h4 :: Map _ Map
   (attrs children -> el "h4" attrs children)
-pub fn h5
+pub fn h5 :: Map _ Map
   (attrs children -> el "h5" attrs children)
-pub fn h6
+pub fn h6 :: Map _ Map
   (attrs children -> el "h6" attrs children)
 
 ;; Lists
-pub fn ul
+pub fn ul :: Map _ Map
   (attrs children -> el "ul" attrs children)
-pub fn ol
+pub fn ol :: Map _ Map
   (attrs children -> el "ol" attrs children)
-pub fn li
+pub fn li :: Map _ Map
   (attrs children -> el "li" attrs children)
 
 ;; Table
-pub fn table
+pub fn table :: Map _ Map
   (attrs children -> el "table" attrs children)
-pub fn thead
+pub fn thead :: Map _ Map
   (attrs children -> el "thead" attrs children)
-pub fn tbody
+pub fn tbody :: Map _ Map
   (attrs children -> el "tbody" attrs children)
-pub fn tfoot
+pub fn tfoot :: Map _ Map
   (attrs children -> el "tfoot" attrs children)
-pub fn tr
+pub fn tr :: Map _ Map
   (attrs children -> el "tr" attrs children)
-pub fn th
+pub fn th :: Map _ Map
   (attrs children -> el "th" attrs children)
-pub fn td
+pub fn td :: Map _ Map
   (attrs children -> el "td" attrs children)
 
 ;; Form
-pub fn form
+pub fn form :: Map _ Map
   (attrs children -> el "form" attrs children)
-pub fn button
+pub fn button :: Map _ Map
   (attrs children -> el "button" attrs children)
-pub fn label
+pub fn label :: Map _ Map
   (attrs children -> el "label" attrs children)
-pub fn select-el
+pub fn select-el :: Map _ Map
   (attrs children -> el "select" attrs children)
-pub fn option
+pub fn option :: Map _ Map
   (attrs children -> el "option" attrs children)
-pub fn textarea
+pub fn textarea :: Map _ Map
   (attrs children -> el "textarea" attrs children)
 
 ;; Script and Style
-pub fn style
+pub fn style :: Map _ Map
   (attrs children -> el "style" attrs children)
-pub fn script
+pub fn script :: Map _ Map
   (attrs children -> el "script" attrs children)
-pub fn title
+pub fn title :: Map _ Map
   (attrs children -> el "title" attrs children)
 
 ;; Void elements (no children -- only take attrs)
-pub fn img
+pub fn img :: Map Map
   (attrs -> el "img" attrs #[])
-pub fn br
+pub fn br :: Map Map
   (attrs -> el "br" attrs #[])
-pub fn hr
+pub fn hr :: Map Map
   (attrs -> el "hr" attrs #[])
-pub fn input
+pub fn input :: Map Map
   (attrs -> el "input" attrs #[])
-pub fn meta-tag
+pub fn meta-tag :: Map Map
   (attrs -> el "meta" attrs #[])
-pub fn link-tag
+pub fn link-tag :: Map Map
   (attrs -> el "link" attrs #[])

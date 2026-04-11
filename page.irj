@@ -16,5 +16,5 @@ fn add-css
 fn build-head
   (title-str css-str extras -> add-css (add-extras (head-base title-str) extras) css-str)
 
-pub fn page
+pub fn page :: Str _ _ _ Str
   (title-str css-str head-extras body-children -> "<!DOCTYPE html>" ++ render (el "html" {lang= "en"} #[(el "head" {} (build-head title-str css-str head-extras)) (el "body" {} body-children)]))
