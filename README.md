@@ -9,9 +9,8 @@ Vrata provides structured HTML generation, CSS helpers, and page templates — r
 Add to your `irij.toml`:
 
 ```toml
-[deps.vrata]
-git = "https://github.com/aldebogdanov/vrata.git"
-tag = "v0.1.1"
+[seeds]
+vrata = { git = "https://github.com/aldebogdanov/vrata.git", tag = "v0.1.2" }
 ```
 
 ## Usage

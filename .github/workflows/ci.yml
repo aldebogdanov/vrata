@@ -25,7 +25,7 @@ jobs:
       - name: Set up vrata as local dep for tests
         run: |
           mkdir -p tests
-          printf '[deps.vrata]\npath = ".."\n' > tests/irij.toml
+          printf '[seeds]\nvrata = { path = ".." }\n' > tests/irij.toml
 
       - name: Run tests
         run: java -jar irij.jar --no-spec-lint tests/test-html.irj
