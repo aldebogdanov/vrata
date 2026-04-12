@@ -6,12 +6,12 @@ Vrata provides structured HTML generation, CSS helpers, and page templates — r
 
 ## Install
 
-Add to your `deps.irj`:
+Add to your `irij.toml`:
 
-```
-dep vrata
-  git "https://github.com/laniakea-etc/vrata.git"
-  tag "v0.1.0"
+```toml
+[deps.vrata]
+git = "https://github.com/aldebogdanov/vrata.git"
+tag = "v0.1.1"
 ```
 
 ## Usage

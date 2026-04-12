@@ -1,0 +1,6 @@
+[project]
+name = "vrata"
+version = "0.1.1"
+description = "Vrata HTML/CSS framework for Irij"
+author = "aldebogdanov"
+license = "MIT"

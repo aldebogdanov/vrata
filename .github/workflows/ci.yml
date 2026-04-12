@@ -15,7 +15,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: '21'
+          java-version: '25'
 
       - name: Download latest irij.jar
         run: gh release download --repo aldebogdanov/irij --pattern 'irij.jar' --dir .
@@ -25,8 +25,7 @@ jobs:
       - name: Set up vrata as local dep for tests
         run: |
           mkdir -p tests
-          echo 'dep vrata' > tests/deps.irj
-          echo '  path ".."' >> tests/deps.irj
+          printf '[deps.vrata]\npath = ".."\n' > tests/irij.toml
 
       - name: Run tests
         run: java -jar irij.jar --no-spec-lint tests/test-html.irj
