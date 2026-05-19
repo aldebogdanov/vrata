@@ -1,5 +1,7 @@
 mod vrata.html
 
+use std.list :open
+
 ;; Vrata -- Hiccup-style HTML rendering for Irij
 ;;
 ;; Elements are maps: {tag= "div" attrs= {class= "x"} children= #[...]}

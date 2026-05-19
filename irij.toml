@@ -1,6 +1,6 @@
 [project]
 name = "vrata"
-version = "0.1.2"
+version = "0.1.3"
 description = "Vrata HTML/CSS framework for Irij"
 author = "aldebogdanov"
 license = "MIT"
