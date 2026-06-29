@@ -21,7 +21,14 @@ pub fn cls :: Str Map
 ;; -- Element creation --
 
 pub fn el :: Str Map _ Map
-  (tag attrs children -> {tag= tag attrs= attrs children= children})
+  => tag attrs children
+  ;; Void elements (<br>, <link>, <img>, …) can't have children. Guard
+  ;; at construction so a mistake fails loud instead of emitting bad
+  ;; HTML. Empty children are fine — that's the normal void case.
+  if (void-tag? tag && (empty? children == false))
+    error ~ "Void element <" ++ tag ++ "> cannot have children"
+  else
+    {tag= tag attrs= attrs children= children}
 
 pub fn raw :: Str Map
   (s -> {raw-html= s})
