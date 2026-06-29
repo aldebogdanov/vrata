@@ -18,8 +18,16 @@ spec Raw
 spec El
   tag :: Str
   attrs :: Map
-  children :: #[Node]
+  ;; children is `#[_]` (any vector) rather than `#[Node]` because a
+  ;; child can be element, raw, OR plain text — and text nodes are
+  ;; bare Str. Irij sum specs can't yet mix a primitive (`Str`) in
+  ;; with named variants, so `Node = Raw | El` would reject every text
+  ;; child. Re-tighten to `#[Node]` (with `Node = Raw | El | Str`) once
+  ;; "primitives as sum-spec variants" lands upstream.
+  children :: #[_]
 
+;; Intended child shape (documentation for now; not yet enforceable —
+;; see the note on El.children above).
 spec Node
   Raw
   El
@@ -34,7 +42,7 @@ pub fn cls :: Str Map
 
 ;; -- Element creation --
 
-pub fn el :: Str Map #[Node] El
+pub fn el :: Str Map #[_] El
   => tag attrs children
   if (void-tag? tag && (empty? children == false))
     error ~ "Void element <" ++ tag ++ "> cannot have children"
@@ -90,101 +98,101 @@ pub fn render-unescaped :: _ Str
 ;; Each takes (attrs children) and returns an element map.
 
 ;; Layout
-pub fn div :: Map #[Node] El
+pub fn div :: Map #[_] El
   (attrs children -> el "div" attrs children)
-pub fn span :: Map #[Node] El
+pub fn span :: Map #[_] El
   (attrs children -> el "span" attrs children)
-pub fn section :: Map #[Node] El
+pub fn section :: Map #[_] El
   (attrs children -> el "section" attrs children)
-pub fn article :: Map #[Node] El
+pub fn article :: Map #[_] El
   (attrs children -> el "article" attrs children)
-pub fn aside :: Map #[Node] El
+pub fn aside :: Map #[_] El
   (attrs children -> el "aside" attrs children)
-pub fn header :: Map #[Node] El
+pub fn header :: Map #[_] El
   (attrs children -> el "header" attrs children)
-pub fn footer :: Map #[Node] El
+pub fn footer :: Map #[_] El
   (attrs children -> el "footer" attrs children)
-pub fn nav :: Map #[Node] El
+pub fn nav :: Map #[_] El
   (attrs children -> el "nav" attrs children)
-pub fn main :: Map #[Node] El
+pub fn main :: Map #[_] El
   (attrs children -> el "main" attrs children)
 
 ;; Text
-pub fn p :: Map #[Node] El
+pub fn p :: Map #[_] El
   (attrs children -> el "p" attrs children)
-pub fn a :: Map #[Node] El
+pub fn a :: Map #[_] El
   (attrs children -> el "a" attrs children)
-pub fn em :: Map #[Node] El
+pub fn em :: Map #[_] El
   (attrs children -> el "em" attrs children)
-pub fn strong :: Map #[Node] El
+pub fn strong :: Map #[_] El
   (attrs children -> el "strong" attrs children)
-pub fn small :: Map #[Node] El
+pub fn small :: Map #[_] El
   (attrs children -> el "small" attrs children)
-pub fn code :: Map #[Node] El
+pub fn code :: Map #[_] El
   (attrs children -> el "code" attrs children)
-pub fn pre-el :: Map #[Node] El
+pub fn pre-el :: Map #[_] El
   (attrs children -> el "pre" attrs children)
-pub fn blockquote :: Map #[Node] El
+pub fn blockquote :: Map #[_] El
   (attrs children -> el "blockquote" attrs children)
 
 ;; Headings
-pub fn h1 :: Map #[Node] El
+pub fn h1 :: Map #[_] El
   (attrs children -> el "h1" attrs children)
-pub fn h2 :: Map #[Node] El
+pub fn h2 :: Map #[_] El
   (attrs children -> el "h2" attrs children)
-pub fn h3 :: Map #[Node] El
+pub fn h3 :: Map #[_] El
   (attrs children -> el "h3" attrs children)
-pub fn h4 :: Map #[Node] El
+pub fn h4 :: Map #[_] El
   (attrs children -> el "h4" attrs children)
-pub fn h5 :: Map #[Node] El
+pub fn h5 :: Map #[_] El
   (attrs children -> el "h5" attrs children)
-pub fn h6 :: Map #[Node] El
+pub fn h6 :: Map #[_] El
   (attrs children -> el "h6" attrs children)
 
 ;; Lists
-pub fn ul :: Map #[Node] El
+pub fn ul :: Map #[_] El
   (attrs children -> el "ul" attrs children)
-pub fn ol :: Map #[Node] El
+pub fn ol :: Map #[_] El
   (attrs children -> el "ol" attrs children)
-pub fn li :: Map #[Node] El
+pub fn li :: Map #[_] El
   (attrs children -> el "li" attrs children)
 
 ;; Table
-pub fn table :: Map #[Node] El
+pub fn table :: Map #[_] El
   (attrs children -> el "table" attrs children)
-pub fn thead :: Map #[Node] El
+pub fn thead :: Map #[_] El
   (attrs children -> el "thead" attrs children)
-pub fn tbody :: Map #[Node] El
+pub fn tbody :: Map #[_] El
   (attrs children -> el "tbody" attrs children)
-pub fn tfoot :: Map #[Node] El
+pub fn tfoot :: Map #[_] El
   (attrs children -> el "tfoot" attrs children)
-pub fn tr :: Map #[Node] El
+pub fn tr :: Map #[_] El
   (attrs children -> el "tr" attrs children)
-pub fn th :: Map #[Node] El
+pub fn th :: Map #[_] El
   (attrs children -> el "th" attrs children)
-pub fn td :: Map #[Node] El
+pub fn td :: Map #[_] El
   (attrs children -> el "td" attrs children)
 
 ;; Form
-pub fn form :: Map #[Node] El
+pub fn form :: Map #[_] El
   (attrs children -> el "form" attrs children)
-pub fn button :: Map #[Node] El
+pub fn button :: Map #[_] El
   (attrs children -> el "button" attrs children)
-pub fn label :: Map #[Node] El
+pub fn label :: Map #[_] El
   (attrs children -> el "label" attrs children)
-pub fn select-el :: Map #[Node] El
+pub fn select-el :: Map #[_] El
   (attrs children -> el "select" attrs children)
-pub fn option :: Map #[Node] El
+pub fn option :: Map #[_] El
   (attrs children -> el "option" attrs children)
-pub fn textarea :: Map #[Node] El
+pub fn textarea :: Map #[_] El
   (attrs children -> el "textarea" attrs children)
 
 ;; Script and Style
-pub fn style :: Map #[Node] El
+pub fn style :: Map #[_] El
   (attrs children -> el "style" attrs children)
-pub fn script :: Map #[Node] El
+pub fn script :: Map #[_] El
   (attrs children -> el "script" attrs children)
-pub fn title :: Map #[Node] El
+pub fn title :: Map #[_] El
   (attrs children -> el "title" attrs children)
 
 ;; Void elements (no children -- only take attrs)

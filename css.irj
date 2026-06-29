@@ -10,10 +10,10 @@ pub fn rule :: Str Str Str
   (selector props -> selector ++ "{" ++ props ++ "}")
 
 ;; Join a vector of CSS rule strings into a single stylesheet string
-pub fn stylesheet :: _ Str
+pub fn stylesheet :: #[Str] Str
   (rules -> join "" rules)
 
 ;; Media query wrapper: media "max-width:700px" #[(rule ".grid" "grid-template-columns:1fr")]
 ;; => "@media(max-width:700px){.grid{grid-template-columns:1fr}}"
-pub fn media :: Str _ Str
+pub fn media :: Str #[Str] Str
   (query rules -> "@media(" ++ query ++ "){" ++ (join "" rules) ++ "}")
